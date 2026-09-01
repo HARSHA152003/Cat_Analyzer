@@ -175,6 +175,18 @@
       }
     }
 
+    function formatMockDate(dateStr) {
+      if (!dateStr) return '-';
+
+      const cleanStr = String(dateStr).split('T')[0];
+      const parts = cleanStr.split('-');
+
+      if (parts.length !== 3) return cleanStr;
+
+      const [year, month, day] = parts;
+      return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`;
+    }
+
     function renderTable() {
       const tbody = document.getElementById('summaryTable');
 
@@ -185,7 +197,7 @@
           </td>
 
           <td class="p-3 text-slate-400">
-            ${m.mockDate ? String(m.mockDate).split('T')[0] : '-'}
+            ${formatMockDate(m.mockDate)}
           </td>
 
           <td class="p-3 text-blue-400 font-medium">
@@ -318,7 +330,6 @@
       });
     }
 
-    // ONLY SECTION 4 HAS BEEN CHANGED
     function renderAccuracyChart() {
       new Chart(document.getElementById('accuracyChart').getContext('2d'), {
         type: 'line',
@@ -398,10 +409,8 @@
           m => `<option value="${m.mockNo}">#${m.mockNo} - ${m.mockName}</option>`
         ).join('');
 
-      if (mockDataset.length > 0) {
-        select.value = mockDataset[mockDataset.length - 1].mockNo;
-        renderMockDetails();
-      }
+      select.value = "";
+      renderMockDetails();
     }
 
     function renderMockDetails() {
