@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter Mock Marks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-4xl mx-auto space-y-6">
+    
+    <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Log Mock Results</h1>
+        <p class="text-slate-400 text-sm">Input raw question breakdown for automated sync</p>
+      </div>
+      <a href="view.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition border border-slate-700">
+        View Analytics Dashboard →
+      </a>
+    </header>
+
+    <form id="markForm" onsubmit="validateAndSubmit(event)" class="bg-slate-800 border border-slate-700 rounded-xl p-4 md:p-6 space-y-6 shadow-xl">
+      
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Mock Number *</label>
+          <input type="number" id="mockNo" name="mockNo" min="1" required placeholder="e.g. 1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:border-emerald-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Mock Name *</label>
+          <input type="text" id="mockName" name="mockName" required placeholder="e.g. SimCAT 01" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:border-emerald-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Date *</label>
+          <input type="date" id="mockDate" name="mockDate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:border-emerald-500 focus:outline-none">
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 border-b border-slate-700 pb-2">Sectional Breakdown</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- VARC -->
+          <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/60 space-y-3">
+            <h3 class="font-semibold text-blue-400">VARC</h3>
+            <div>
+              <label class="text-xs text-slate-400">Total Questions</label>
+              <input type="number" id="varc_total" value="24" min="1" required oninput="calculateSection('varc')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-xs text-slate-400">Correct</label>
+                <input type="number" id="varc_correct" value="0" min="0" required oninput="calculateSection('varc')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Incorrect</label>
+                <input type="number" id="varc_incorrect" value="0" min="0" required oninput="calculateSection('varc')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Skipped</label>
+                <input type="number" id="varc_skipped" value="24" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm bg-slate-800/50">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Score</label>
+                <input type="number" id="varc_score" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+            </div>
+          </div>
+
+          <!-- DILR -->
+          <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/60 space-y-3">
+            <h3 class="font-semibold text-amber-400">DILR</h3>
+            <div>
+              <label class="text-xs text-slate-400">Total Questions</label>
+              <input type="number" id="dilr_total" value="20" min="1" required oninput="calculateSection('dilr')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-xs text-slate-400">Correct</label>
+                <input type="number" id="dilr_correct" value="0" min="0" required oninput="calculateSection('dilr')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Incorrect</label>
+                <input type="number" id="dilr_incorrect" value="0" min="0" required oninput="calculateSection('dilr')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Skipped</label>
+                <input type="number" id="dilr_skipped" value="20" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm bg-slate-800/50">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Score</label>
+                <input type="number" id="dilr_score" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+            </div>
+          </div>
+
+          <!-- QA -->
+          <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/60 space-y-3">
+            <h3 class="font-semibold text-purple-400">QA</h3>
+            <div>
+              <label class="text-xs text-slate-400">Total Questions</label>
+              <input type="number" id="qa_total" value="22" min="1" required oninput="calculateSection('qa')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-xs text-slate-400">Correct</label>
+                <input type="number" id="qa_correct" value="0" min="0" required oninput="calculateSection('qa')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Incorrect</label>
+                <input type="number" id="qa_incorrect" value="0" min="0" required oninput="calculateSection('qa')" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Skipped</label>
+                <input type="number" id="qa_skipped" value="22" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm bg-slate-800/50">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Score</label>
+                <input type="number" id="qa_score" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-sm">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div id="errorMsg" class="hidden text-red-400 bg-red-950/50 border border-red-800 p-3 rounded-lg text-sm"></div>
+        <button type="submit" id="submitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 font-semibold py-3 rounded-lg transition text-white">
+          Submit Mock Score
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWf5ENRkDatkOzAtwQbNd2qu-z1IU27II5JKbpUjjKNZaUy8EuYCXj47oBgskdIqDAGQ/exec";
+
+    document.getElementById('mockDate').valueAsDate = new Date();
+
+    function calculateSection(prefix) {
+      const total = parseInt(document.getElementById(`${prefix}_total`).value) || 0;
+      const correct = parseInt(document.getElementById(`${prefix}_correct`).value) || 0;
+      const incorrect = parseInt(document.getElementById(`${prefix}_incorrect`).value) || 0;
+
+      const skipped = Math.max(0, total - (correct + incorrect));
+      const score = (correct * 3) - (incorrect * 1);
+
+      document.getElementById(`${prefix}_skipped`).value = skipped;
+      document.getElementById(`${prefix}_score`).value = score;
+    }
+
+    async function validateAndSubmit(e) {
+      e.preventDefault();
+      const errorDiv = document.getElementById('errorMsg');
+      const submitBtn = document.getElementById('submitBtn');
+      errorDiv.classList.add('hidden');
+
+      const getNum = id => parseInt(document.getElementById(id).value) || 0;
+
+      const sections = [
+        { name: 'VARC', total: getNum('varc_total'), c: getNum('varc_correct'), i: getNum('varc_incorrect'), s: getNum('varc_skipped'), score: getNum('varc_score') },
+        { name: 'DILR', total: getNum('dilr_total'), c: getNum('dilr_correct'), i: getNum('dilr_incorrect'), s: getNum('dilr_skipped'), score: getNum('dilr_score') },
+        { name: 'QA', total: getNum('qa_total'), c: getNum('qa_correct'), i: getNum('qa_incorrect'), s: getNum('qa_skipped'), score: getNum('qa_score') }
+      ];
+
+      for (const sec of sections) {
+        const sum = sec.c + sec.i + sec.s;
+        if (sum !== sec.total) {
+          errorDiv.innerText = `Validation Error: [${sec.name}] Correct (${sec.c}) + Incorrect (${sec.i}) + Skipped (${sec.s}) equals ${sum}, which does not match Total Questions (${sec.total}).`;
+          errorDiv.classList.remove('hidden');
+          return;
+        }
+
+        const maxPossible = sec.c * 3;
+        const minPossible = (sec.c * 3) - sec.i;
+
+        if (sec.score > maxPossible) {
+          errorDiv.innerText = `Validation Error: [${sec.name}] Score (${sec.score}) cannot exceed max possible score (${maxPossible}) for ${sec.c} correct answers.`;
+          errorDiv.classList.remove('hidden');
+          return;
+        }
+
+        if (sec.score < minPossible) {
+          errorDiv.innerText = `Validation Error: [${sec.name}] Score (${sec.score}) is lower than ${minPossible} (assuming all ${sec.i} incorrect questions carry a -1 penalty).`;
+          errorDiv.classList.remove('hidden');
+          return;
+        }
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Submitting to Sheet...";
+
+      const buildSection = (c, i, s, score, total) => {
+        const attempted = c + i;
+        const accuracy = attempted > 0 ? ((c / attempted) * 100).toFixed(1) + '%' : '0%';
+        const attemptRate = total > 0 ? ((attempted / total) * 100).toFixed(1) + '%' : '0%';
+        
+        return { c, i, skipped: s, total, score, accuracy, attemptRate, max: total * 3 };
+      };
+
+      const varc = buildSection(sections[0].c, sections[0].i, sections[0].s, sections[0].score, sections[0].total);
+      const dilr = buildSection(sections[1].c, sections[1].i, sections[1].s, sections[1].score, sections[1].total);
+      const qa = buildSection(sections[2].c, sections[2].i, sections[2].s, sections[2].score, sections[2].total);
+
+      const totCorrect = varc.c + dilr.c + qa.c;
+      const totIncorrect = varc.i + dilr.i + qa.i;
+      const totSkipped = varc.skipped + dilr.skipped + qa.skipped;
+      const totAttempted = totCorrect + totIncorrect;
+      const totQ = varc.total + dilr.total + qa.total;
+
+      const payload = {
+        mockNo: document.getElementById('mockNo').value,
+        mockName: document.getElementById('mockName').value,
+        mockDate: document.getElementById('mockDate').value,
+
+        varc_total: varc.total, varc_correct: varc.c, varc_incorrect: varc.i, varc_max: varc.max, varc_skipped: varc.skipped, varc_score: varc.score, varc_accuracy: varc.accuracy, varc_attemptRate: varc.attemptRate,
+        dilr_total: dilr.total, dilr_correct: dilr.c, dilr_incorrect: dilr.i, dilr_max: dilr.max, dilr_skipped: dilr.skipped, dilr_score: dilr.score, dilr_accuracy: dilr.accuracy, dilr_attemptRate: dilr.attemptRate,
+        qa_total: qa.total, qa_correct: qa.c, qa_incorrect: qa.i, qa_max: qa.max, qa_skipped: qa.skipped, qa_score: qa.score, qa_accuracy: qa.accuracy, qa_attemptRate: qa.attemptRate,
+
+        overall_score: varc.score + dilr.score + qa.score,
+        overall_maxM: totQ * 3,
+        overall_correct: totCorrect,
+        overall_incorrect: totIncorrect,
+        overall_skipped: totSkipped,
+        overall_attempted: totAttempted,
+        overall_totalQ: totQ,
+        overall_accuracy: totAttempted > 0 ? ((totCorrect / totAttempted) * 100).toFixed(1) + '%' : '0%',
+        overall_attemptRate: totQ > 0 ? ((totAttempted / totQ) * 100).toFixed(1) + '%' : '0%'
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(payload).toString()
+        });
+
+        alert("Mock logged successfully!");
+        window.location.href = "view.html";
+      } catch (err) {
+        errorDiv.innerText = "Submission Failed. Verify connection and SCRIPT_URL.";
+        errorDiv.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit Mock Score";
+      }
+    }
+  </script>
+</body>
+</html>
