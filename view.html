@@ -135,7 +135,9 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWf5ENRkDatkOzAtwQbNd2qu-z1IU27II5JKbpUjjKNZaUy8EuYCXj47oBgskdIqDAGQ/exec";
+    // ---- Supabase config: paste your values from Project Settings -> API ----
+    const SUPABASE_URL = "https://cgnjtugdyddnqnmvxqqf.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_DaEjcPQbX-7M-Bu7vGB0zg_l5lkI43R";
 
     let mockDataset = [];
 
@@ -143,7 +145,13 @@
 
     async function loadAllData() {
       try {
-        const res = await fetch(SCRIPT_URL);
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/mock_results?select=*&order=mockNo.asc`, {
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`
+          }
+        });
+        if (!res.ok) throw new Error(await res.text());
         const raw = await res.json();
 
         mockDataset = [...raw].sort(
@@ -162,7 +170,7 @@
         document.getElementById('summaryTable').innerHTML = `
           <tr>
             <td colspan="8" class="p-6 text-center text-red-400">
-              Failed to load data. Verify SCRIPT_URL deployment.
+              Failed to load data. Verify Supabase URL/key and RLS policies.
             </td>
           </tr>
         `;
@@ -171,6 +179,12 @@
 
     function formatMockDate(dateInput) {
       if (!dateInput) return '-';
+
+      // Supabase returns plain YYYY-MM-DD; format it directly to avoid timezone shifts
+      const plain = String(dateInput).match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (plain) {
+        return `${plain[3]}-${plain[2]}-${plain[1]}`;
+      }
 
       const d = new Date(dateInput);
       
@@ -182,7 +196,7 @@
         return `${day}-${month}-${year}`;
       }
 
-      // Fallback string parsing for YYYY-MM-DD or similar standard formats
+      // Fallback string parsing for similar standard formats
       const cleanStr = String(dateInput).split('T')[0];
       const parts = cleanStr.split(/[-/]/);
 

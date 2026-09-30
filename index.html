@@ -135,8 +135,10 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWf5ENRkDatkOzAtwQbNd2qu-z1IU27II5JKbpUjjKNZaUy8EuYCXj47oBgskdIqDAGQ/exec";
-
+    // ---- Supabase config: paste your values from Project Settings -> API ----
+    const SUPABASE_URL = "https://cgnjtugdyddnqnmvxqqf.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_DaEjcPQbX-7M-Bu7vGB0zg_l5lkI43R";
+    
     document.getElementById('mockDate').valueAsDate = new Date();
 
     function calculateSection(prefix) {
@@ -190,7 +192,7 @@
       }
 
       submitBtn.disabled = true;
-      submitBtn.innerText = "Submitting to Sheet...";
+      submitBtn.innerText = "Submitting to Supabase...";
 
       const buildSection = (c, i, s, score, total) => {
         const attempted = c + i;
@@ -211,7 +213,7 @@
       const totQ = varc.total + dilr.total + qa.total;
 
       const payload = {
-        mockNo: document.getElementById('mockNo').value,
+        mockNo: Number(document.getElementById('mockNo').value),
         mockName: document.getElementById('mockName').value,
         mockDate: document.getElementById('mockDate').value,
 
@@ -231,17 +233,24 @@
       };
 
       try {
-        await fetch(SCRIPT_URL, {
+        // Upsert: submitting an existing mock number overwrites that row
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/mock_results?on_conflict=mockNo`, {
           method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams(payload).toString()
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "resolution=merge-duplicates,return=minimal"
+          },
+          body: JSON.stringify(payload)
         });
+        if (!res.ok) throw new Error(await res.text());
 
         alert("Mock logged successfully!");
         window.location.href = "view.html";
       } catch (err) {
-        errorDiv.innerText = "Submission Failed. Verify connection and SCRIPT_URL.";
+        console.error(err);
+        errorDiv.innerText = "Submission Failed: " + err.message;
         errorDiv.classList.remove('hidden');
       } finally {
         submitBtn.disabled = false;
